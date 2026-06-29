@@ -1,0 +1,264 @@
+:root{
+  --preto:#111111;
+  --amarelo:#FFCC00;
+  --cinza:#2A2A2A;
+  --branco:#FFFFFF;
+  --max:1200px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto} /* Lenis cuida do scroll */
+body{
+  background:var(--preto);
+  color:var(--branco);
+  font-family:'Inter',system-ui,sans-serif;
+  overflow-x:hidden;
+  line-height:1.6;
+}
+h1,h2,h3{font-family:'Anton','Impact',sans-serif;text-transform:uppercase;font-weight:400;line-height:.95;letter-spacing:.5px}
+.sub{font-family:'Montserrat',sans-serif;font-weight:900;text-transform:uppercase;letter-spacing:1px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px;width:100%}
+img{max-width:100%;display:block}
+
+/* ---------- MENU FIXO (glass/fosco) ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:rgba(17,17,17,.55);
+  -webkit-backdrop-filter:blur(12px) saturate(140%);
+  backdrop-filter:blur(12px) saturate(140%);
+  border-bottom:1px solid rgba(255,204,0,.25);
+}
+.nav__inner{display:flex;align-items:center;justify-content:space-between;height:68px;gap:20px}
+.nav__brand{display:flex;align-items:center;text-decoration:none;color:var(--branco);margin-left:-24px} /* casa com o Hero, que não tem recuo horizontal */
+.nav__brand span{font-family:'Anton','Impact',sans-serif;text-transform:uppercase;font-size:1.25rem;letter-spacing:1px}
+.nav__links{display:flex;gap:28px;list-style:none;margin-left:auto}
+.nav__links a{
+  color:var(--branco);text-decoration:none;font-family:'Montserrat';font-weight:700;
+  text-transform:uppercase;font-size:.82rem;letter-spacing:1px;transition:color .2s ease;
+}
+.nav__links a:hover{color:var(--amarelo)}
+
+/* botão hambúrguer (vira X quando aberto) */
+.nav__burger{display:none;background:none;border:0;cursor:pointer;width:34px;height:24px;position:relative;z-index:60;padding:0}
+.nav__burger span{position:absolute;left:0;right:0;height:3px;background:var(--branco);border-radius:2px;transition:transform .3s ease,opacity .25s ease,top .3s ease,bottom .3s ease}
+.nav__burger span:nth-child(1){top:0}
+.nav__burger span:nth-child(2){top:50%;transform:translateY(-50%)}
+.nav__burger span:nth-child(3){bottom:0}
+.nav.open .nav__burger span:nth-child(1){top:50%;transform:translateY(-50%) rotate(45deg)}
+.nav.open .nav__burger span:nth-child(2){opacity:0}
+.nav.open .nav__burger span:nth-child(3){bottom:50%;transform:translateY(50%) rotate(-45deg)}
+
+@media (max-width:760px){
+  .nav__brand{margin-left:0}
+  .nav__burger{display:block}
+  /* overlay fosco tomando todo o viewport */
+  .nav__links{
+    position:fixed;inset:0;height:100dvh;margin:0;gap:34px;z-index:55;
+    flex-direction:column;justify-content:center;align-items:center;
+    background:#0b0b0b;
+    overscroll-behavior:contain;touch-action:none;
+    opacity:0;visibility:hidden;transform:translateY(-12px);
+    transition:opacity .35s ease,transform .35s ease,visibility .35s;
+  }
+  .nav.open .nav__links{opacity:1;visibility:visible;transform:none}
+  .nav__links a{font-size:1.7rem}
+}
+/* trava total: nada atrás se move com o menu aberto */
+body.menu-open{overflow:hidden;height:100dvh;touch-action:none;overscroll-behavior:none}
+
+/* ---------- BOTÃO CTA com pulso + brilho metálico ---------- */
+.cta{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--amarelo);color:var(--preto);
+  font-family:'Montserrat',sans-serif;font-weight:900;text-transform:uppercase;
+  font-size:clamp(.85rem,2.5vw,1.05rem);letter-spacing:1px;
+  padding:18px 34px;border:none;border-radius:4px;cursor:pointer;text-decoration:none;
+  position:relative;overflow:hidden;
+  clip-path:polygon(0 0,100% 0,100% 70%,calc(100% - 18px) 100%,0 100%); /* corte angular 45° */
+  box-shadow:0 0 0 0 rgba(255,204,0,.7);
+  animation:pulse 2.2s infinite;
+}
+.cta:hover{transform:translateY(-2px)}
+.cta::after{ /* brilho metálico que cruza */
+  content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.85),transparent);
+  transform:skewX(-20deg);transition:none;
+}
+.cta:hover::after{animation:shine .8s ease}
+@keyframes shine{to{left:130%}}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,204,0,.6)}
+  70%{box-shadow:0 0 0 22px rgba(255,204,0,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,204,0,0)}
+}
+
+/* ============ HERO — camadas ============ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden}
+.layer{position:absolute;inset:0;will-change:transform}
+
+/* Camada de fundo: textura + blur */
+.hero__bg{
+  background:
+    radial-gradient(circle at 30% 20%,#1c1c1c 0,#0a0a0a 70%),
+    repeating-linear-gradient(45deg,#161616 0 2px,#111 2px 6px); /* fibra/metal escovado */
+  filter:blur(2px);
+  transform:scale(1.1);
+}
+/* Engrenagem gigante girando devagar */
+.hero__gear{display:grid;place-items:center;opacity:.12}
+.hero__gear svg{width:min(120vw,1100px);height:auto;color:var(--amarelo);animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Camada de texto */
+.hero__content{position:relative;z-index:3;padding:80px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:clamp(20px,4vw,60px)}
+.hero__text{flex:1 1 auto;min-width:0}
+.hero h1{
+  font-size:clamp(2.6rem,9vw,7rem);
+  line-height:1.08;
+}
+/* Título vazado que se preenche de amarelo no scroll (--fill controlado via JS) */
+.fill-text{
+  position:relative;display:inline-block;
+  color:transparent;-webkit-text-stroke:2px var(--amarelo);
+}
+.fill-text::before{
+  content:attr(data-text);position:absolute;inset:0;
+  color:var(--amarelo);-webkit-text-stroke:0;
+  clip-path:inset(0 calc(100% - var(--fill,0%)) 0 0);
+}
+.hero__sub{max-width:560px;margin:24px 0 36px;font-size:clamp(1rem,2.4vw,1.25rem);color:#cfcfcf}
+
+/* Camada frontal: mascote saltando da tela */
+.hero__mascote{
+  flex:0 0 auto;z-index:4;
+  width:clamp(420px,62vw,896px);
+  margin-right:clamp(-250px,-17vw,-117px); /* PNG tem ~28% de margem transparente: puxa o brasão p/ alinhar com a borda direita do menu (Fale Conosco) */
+  filter:drop-shadow(0 25px 40px rgba(0,0,0,.6));
+  will-change:transform,opacity;pointer-events:none;transform-origin:center;
+}
+.hero__mascote img{width:100%}
+
+/* ============ SEÇÕES ============ */
+section{position:relative;padding:clamp(70px,12vh,140px) 0}
+.tag{color:var(--amarelo);font-family:'Montserrat';font-weight:900;letter-spacing:3px;font-size:.8rem;text-transform:uppercase}
+.h-sec{font-size:clamp(2.2rem,7vw,5rem);margin:8px 0 28px}
+
+/* Quem somos */
+.sobre{background:var(--cinza);overflow:hidden}
+.sobre__grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+.sobre__txt p{max-width:60ch;color:#e2e2e2;font-size:1.08rem}
+/* desktop: alinha o texto com o "Zé Ruela" do header e o Hero (borda externa do wrap) */
+@media (min-width:761px){ .sobre__txt{margin-left:-24px} }
+.sobre__deco{position:absolute;right:-60px;top:50%;transform:translateY(-50%);opacity:.06;z-index:0;pointer-events:none}
+.sobre__deco svg{width:520px;color:var(--branco)}
+.sobre .wrap{position:relative;z-index:1}
+
+/* Diferenciais */
+#diferenciais{overflow:hidden}
+/* engrenagem de fundo girando ao rolar */
+.dif__gear{position:absolute;left:-12%;top:8%;width:min(70vw,640px);color:var(--branco);opacity:.05;z-index:0;pointer-events:none}
+.dif__gear svg{width:100%;display:block}
+#diferenciais .wrap{position:relative;z-index:1}
+/* desktop: alinha título e cards com o "Zé Ruela" do header (borda externa do wrap) */
+@media (min-width:761px){ #diferenciais .tag, #diferenciais .h-sec, #diferenciais .cards{margin-left:-24px} }
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:40px}
+.card{
+  background:#0f0f0f;border-radius:6px;position:relative;overflow:hidden;
+  border:2px solid var(--amarelo);border-left-width:4px;
+  clip-path:polygon(0 0,100% 0,100% 100%,24px 100%,0 calc(100% - 24px));
+  display:flex;flex-direction:column;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.card:hover{transform:translateY(-8px) scale(1.03);box-shadow:0 20px 45px rgba(0,0,0,.6),0 0 0 1px rgba(255,204,0,.4)}
+/* imagem inteira (sem corte), moldura uniforme, com parallax suave */
+.card__media{position:relative;overflow:hidden;aspect-ratio:4/3;background:#0b0b0b}
+.card__img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:16px;will-change:transform}
+.card:hover .card__img{filter:saturate(1.15)}
+.card__body{padding:26px 26px 32px}
+.card h3{font-size:1.5rem;margin-bottom:12px}
+.card p{color:#cfcfcf}
+
+/* ticker estático estilo letreiro de oficina */
+.ticker{margin-top:clamp(60px,9vw,110px);border-top:2px solid var(--amarelo);border-bottom:2px solid var(--amarelo);padding:clamp(18px,4vw,40px) 0;overflow:hidden;white-space:nowrap}
+.ticker span{
+  display:block;text-align:center;
+  font-family:'Anton','Impact',sans-serif;text-transform:uppercase;
+  font-size:clamp(.8rem,3vw,2.6rem);line-height:1.1;
+  color:transparent;-webkit-text-stroke:2px var(--amarelo);
+}
+/* mobile: branco sólido e legível (override depois da base p/ vencer no cascade) */
+@media (max-width:760px){
+  .ticker{white-space:normal}
+  .ticker span{color:var(--branco);-webkit-text-stroke:0;white-space:normal}
+}
+
+/* Fechamento Mercado Livre */
+.fechar{background:#000;text-align:center}
+.box-ml{
+  background:var(--amarelo);color:var(--preto);border-radius:10px;
+  padding:clamp(40px,8vw,80px) clamp(24px,6vw,70px);position:relative;
+  clip-path:polygon(0 0,100% 0,100% 88%,calc(100% - 40px) 100%,0 100%);
+  box-shadow:0 0 80px rgba(255,204,0,.25);
+}
+.box-ml h2{font-size:clamp(2rem,6vw,4.2rem);margin-bottom:18px}
+.box-ml p{max-width:54ch;margin:0 auto 34px;font-weight:500;color:#1a1a1a}
+.box-ml .cta{background:var(--preto);color:var(--amarelo);animation:pulse-dark 2.2s infinite}
+@keyframes pulse-dark{
+  0%{box-shadow:0 0 0 0 rgba(0,0,0,.5)}
+  70%{box-shadow:0 0 0 22px rgba(0,0,0,0)}
+  100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}
+}
+.fechar__mascote{width:clamp(150px,22vw,260px);margin:0 auto 24px;filter:drop-shadow(0 14px 24px rgba(0,0,0,.6))}
+
+/* reveal base (Intersection/ScrollTrigger adicionam .in) */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:opacity .8s ease,transform .8s ease}
+.reveal-left.in{opacity:1;transform:none}
+
+/* ---------- Fale Conosco ---------- */
+.contato{background:var(--cinza)}
+/* desktop: alinha conteúdo com o "Zé Ruela" do header (borda externa do wrap) */
+@media (min-width:761px){ #contato .tag, #contato .h-sec, #contato .contato__lead, #contato .form, #contato .contato__wpp{margin-left:-24px} }
+.contato__lead{max-width:60ch;color:#d8d8d8;margin-bottom:36px}
+.form{max-width:640px;display:flex;flex-direction:column;gap:16px}
+.form__row{display:flex;gap:16px}
+.form input,.form textarea{
+  width:100%;background:#0f0f0f;border:2px solid #3a3a3a;border-radius:5px;
+  color:var(--branco);font-family:'Inter',sans-serif;font-size:1rem;padding:14px 16px;
+  transition:border-color .2s ease;
+}
+.form input::placeholder,.form textarea::placeholder{color:#888}
+.form input:focus,.form textarea:focus{outline:none;border-color:var(--amarelo)}
+.form textarea{resize:vertical}
+.form .cta{align-self:flex-start;margin-top:6px}
+
+.contato__wpp{margin-top:clamp(50px,8vw,90px);padding-top:36px;border-top:1px solid #3a3a3a}
+.contato__wpp p{font-family:'Montserrat';font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#cfcfcf;margin-bottom:16px}
+.btn-wpp{
+  display:inline-flex;align-items:center;gap:12px;text-decoration:none;
+  background:#25D366;color:#062b15;
+  font-family:'Montserrat';font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:1rem;
+  padding:16px 28px;border-radius:6px;transition:transform .2s ease,box-shadow .2s ease;
+}
+.btn-wpp svg{width:24px;height:24px}
+.btn-wpp:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(37,211,102,.35)}
+@media (max-width:560px){.form__row{flex-direction:column}}
+
+footer{background:var(--preto);text-align:center;padding:40px 0;color:#777;font-size:.85rem;border-top:1px solid #222}
+footer .sub{color:var(--amarelo)}
+
+/* acessibilidade: respeita quem desliga animação */
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .reveal,.reveal-left{opacity:1!important;transform:none!important;transition:none}
+  .hero__gear svg{animation:none}
+}
+@media (max-width:640px){
+  .hero{align-items:center;min-height:88svh;padding-top:68px} /* ocupa quase a tela e fica abaixo do menu fixo — separa do "Quem somos" */
+  .hero__content{flex-direction:column;align-items:center;text-align:center;gap:22px;padding-block:32px}
+  .hero__mascote{order:-1;width:min(88%,380px);opacity:.95;margin:0 auto} /* logo maior */
+  .hero h1{font-size:clamp(2.4rem,11vw,3.4rem)}
+  /* mantém a frase do rodapé em uma única linha */
+  footer p{white-space:nowrap;font-size:clamp(.6rem,3vw,.85rem)}
+}
