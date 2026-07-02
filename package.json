@@ -1,8 +1,0 @@
-{
-  "name": "zearruela-contato",
-  "private": true,
-  "type": "commonjs",
-  "scripts": {
-    "start": "node --env-file=.env server.js"
-  }
-}
