@@ -247,7 +247,7 @@ section{position:relative;padding:clamp(70px,12vh,140px) 0;overflow-x:clip} /* c
 .form .cta{align-self:flex-start;margin-top:6px}
 .form__ok{font-family:'Montserrat';font-weight:700;font-size:clamp(1.1rem,2.4vw,1.4rem);color:var(--amarelo);padding:18px 0}
 
-.contato__wpp{margin-top:clamp(50px,8vw,90px);padding-top:36px;border-top:1px solid #3a3a3a}
+.contato__wpp{margin-top:clamp(50px,8vw,90px);padding-top:36px;border-top:1px solid #3a3a3a;text-align:center}
 .contato__wpp p{font-family:'Montserrat';font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#cfcfcf;margin-bottom:16px}
 .btn-wpp{
   display:inline-flex;align-items:center;gap:12px;text-decoration:none;
